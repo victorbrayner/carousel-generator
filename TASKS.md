@@ -11,8 +11,8 @@ Este arquivo e a fonte de verdade das tarefas do projeto. Trabalharemos em uma t
 
 ## Estado atual
 
-- Publicacao planejada: Netlify conectado ao repositorio no GitHub.
-- Repositorio Git local: ainda sera inicializado pelo responsavel pelo projeto.
+- Publicacao: Netlify conectado ao repositorio no GitHub, com deploy automatico a cada push.
+- Repositorio Git: inicializado e conectado ao remoto `origin` no GitHub.
 - Aplicacao: uma pagina HTML estatica com quatro slides editaveis e exportacao PNG.
 
 ## Legenda
@@ -24,7 +24,7 @@ Este arquivo e a fonte de verdade das tarefas do projeto. Trabalharemos em uma t
 
 ## Fundacao
 
-### [ ] INFRA-01 - Inicializar o repositorio Git
+### [x] INFRA-01 - Inicializar o repositorio Git
 
 Responsavel: projeto
 
@@ -42,7 +42,7 @@ Criterios de aceite:
 2. O repositorio remoto recebe o primeiro commit.
 3. `index.html` e este arquivo estao versionados.
 
-### [ ] INFRA-02 - Conectar o repositorio ao Netlify
+### [x] INFRA-02 - Conectar o repositorio ao Netlify
 
 Responsavel: projeto
 
@@ -60,7 +60,7 @@ Criterios de aceite:
 2. A URL publica abre sem erros no navegador.
 3. Uma alteracao enviada ao GitHub dispara um novo deploy.
 
-### [ ] DOC-01 - Criar documentacao operacional
+### [x] DOC-01 - Criar documentacao operacional
 
 Dependencias: INFRA-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`INFRA-01 - Inicializar o repositorio Git`
+`DOC-02 - Criar instrucoes permanentes para agentes`
 
-Depois de concluir INFRA-01, atualize o estado dela para `[x]` e prossiga para `INFRA-02`.
+Depois de concluir DOC-02, atualize o estado dela para `[x]` e prossiga para `APP-01` ou para uma tarefa de qualidade nao bloqueada.
