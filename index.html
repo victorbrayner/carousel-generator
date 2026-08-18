@@ -78,6 +78,12 @@
     width:100%; font-size:12.5px; color:var(--text-dim); font-family:'Inter',sans-serif;
   }
   .hint b{color:var(--text-primary); font-weight:600;}
+  .export-status{
+    width:100%; min-height:18px; margin:0; font-size:12.5px; font-family:'Inter',sans-serif;
+    color:var(--text-dim);
+  }
+  .export-status[data-state="success"]{color:var(--accent-mint);}
+  .export-status[data-state="error"]{color:var(--accent-coral);}
 
   /* ---------- stage / grid ---------- */
   .stage{
@@ -273,6 +279,7 @@
     <div class="hint">
       Clique nos títulos, textos, preço, assinatura ou CTA pra editar. O campo <b>“Mês da agenda”</b> atualiza a aba de todos os slides de uma vez. Espere as fontes carregarem antes de baixar (o botão fica desabilitado até lá).
     </div>
+    <p class="export-status" id="exportStatus" role="status" aria-live="polite"></p>
   </div>
 
   <div class="stage">
@@ -546,12 +553,18 @@
 
   // ---------- export helpers ----------
   const downloadAllBtn = document.getElementById('downloadAllBtn');
+  const exportStatus = document.getElementById('exportStatus');
   const slideOrder = [
     {id:'slide1', name:'01-capa'},
     {id:'slide2', name:'02-mentoria-como-funciona'},
     {id:'slide3', name:'03-como-agendar'},
     {id:'slide4', name:'04-aulas'}
   ];
+
+  function showExportStatus(message, state){
+    exportStatus.textContent = message;
+    exportStatus.dataset.state = state || 'info';
+  }
 
   function captureSlide(id){
     return new Promise((resolve, reject)=>{
@@ -589,12 +602,14 @@
       const original = btn.textContent;
       btn.textContent = 'Gerando…';
       btn.disabled = true;
+      showExportStatus('Gerando ' + name + '.');
       try{
         const canvas = await captureSlide(id);
         triggerDownload(canvas, name);
+        showExportStatus(name + ' foi gerado. Confira o download do navegador.', 'success');
       }catch(e){
         console.error(e);
-        alert('Não consegui gerar a imagem. Tenta de novo em alguns segundos.');
+        showExportStatus('Não foi possível gerar ' + name + '. Tente novamente.', 'error');
       }
       btn.textContent = original;
       btn.disabled = false;
@@ -604,34 +619,47 @@
   downloadAllBtn.addEventListener('click', async ()=>{
     downloadAllBtn.disabled = true;
     const original = downloadAllBtn.textContent;
+    const failed = [];
+    let completed = 0;
     for(let i=0; i<slideOrder.length; i++){
       downloadAllBtn.textContent = 'Gerando ' + (i+1) + '/4…';
+      showExportStatus('Gerando slide ' + (i+1) + ' de 4.');
       try{
         const canvas = await captureSlide(slideOrder[i].id);
         triggerDownload(canvas, slideOrder[i].name);
+        completed++;
       }catch(e){
         console.error(e);
+        failed.push(slideOrder[i].name);
       }
       await new Promise(r=>setTimeout(r, 350));
     }
     downloadAllBtn.textContent = original;
     downloadAllBtn.disabled = false;
+    if(failed.length){
+      showExportStatus(completed + ' de 4 slides foram gerados. Falharam: ' + failed.join(', ') + '.', 'error');
+    }else{
+      showExportStatus('Os 4 slides foram gerados. Confira os downloads do navegador.', 'success');
+    }
   });
 
   // disable downloads until fonts are actually loaded (avoids blank/fallback-font exports)
   downloadAllBtn.disabled = true;
   downloadAllBtn.textContent = 'Carregando fontes…';
+  showExportStatus('Carregando fontes para exportação.');
   document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = true);
   if(document.fonts && document.fonts.ready){
     document.fonts.ready.then(()=>{
       downloadAllBtn.disabled = false;
       downloadAllBtn.textContent = '⬇ Baixar os 4 slides (PNG)';
       document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
+      showExportStatus('Pronto para exportar.', 'success');
     });
   } else {
     downloadAllBtn.disabled = false;
     downloadAllBtn.textContent = '⬇ Baixar os 4 slides (PNG)';
     document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
+    showExportStatus('Pronto para exportar.', 'success');
   }
 </script>
 </body>

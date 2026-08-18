@@ -107,7 +107,7 @@ Criterios de aceite:
 1. A dica da interface descreve fielmente o que pode ser editado.
 2. Todo campo declarado editavel e exportado com o texto atualizado.
 
-### [ ] APP-02 - Exibir status e falhas de exportacao
+### [x] APP-02 - Exibir status e falhas de exportacao
 
 Dependencias: APP-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`APP-02 - Exibir status e falhas de exportacao`
+`APP-03 - Exportar todos os slides em ZIP`
 
-Depois de concluir APP-02, atualize o estado dela para `[x]` e prossiga para `APP-03`.
+Depois de concluir APP-03, atualize o estado dela para `[x]` e prossiga para `APP-04`.

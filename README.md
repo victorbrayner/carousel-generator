@@ -21,6 +21,7 @@ The project has no build step or server requirement.
 3. Use the individual download button to export one slide.
 4. Use `Baixar os 4 slides (PNG)` to export the complete carousel.
 5. Wait for fonts to load before exporting. Export buttons remain disabled until then.
+6. Check the status message in the toolbar for export progress, success, or failed slide names.
 
 The output slide dimensions are 1080x1350 pixels. The current export scale produces PNG files at 2160x2700 pixels.
 
