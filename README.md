@@ -35,6 +35,14 @@ Netlify is connected directly to the GitHub repository.
 
 The static entry point is `index.html` at the repository root. Do not rename or move it without updating the Netlify publish configuration.
 
+## Test
+
+Browser tests use Playwright with Chromium in desktop and mobile viewports.
+
+1. Run `npm install` to install the fixed test dependency.
+2. Run `npx playwright install chromium` once to download the test browser.
+3. Run `npm test` to start the local static server and execute the suite.
+
 ## Maintenance Workflow
 
 1. Check `TASKS.md` and select one unblocked task.

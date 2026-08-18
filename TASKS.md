@@ -170,7 +170,7 @@ Criterios de aceite:
 
 ## Qualidade Automatizada
 
-### [ ] QA-01 - Configurar testes de navegador com Playwright
+### [x] QA-01 - Configurar testes de navegador com Playwright
 
 Dependencias: INFRA-01, DOC-01
 
