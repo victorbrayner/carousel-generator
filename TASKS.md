@@ -40,7 +40,7 @@ Criterios de aceite:
 
 1. `git status` funciona no diretorio do projeto.
 2. O repositorio remoto recebe o primeiro commit.
-3. `carrossel-carreira-ti.html` e este arquivo estao versionados.
+3. `index.html` e este arquivo estao versionados.
 
 ### [ ] INFRA-02 - Conectar o repositorio ao Netlify
 
@@ -52,7 +52,7 @@ Primeiros passos:
 
 1. Criar um novo site no Netlify a partir do repositorio GitHub.
 2. Configurar publicacao estatica sem comando de build nesta primeira fase.
-3. Definir `carrossel-carreira-ti.html` como pagina inicial ou renomea-lo para `index.html`.
+3. Manter `index.html` como pagina inicial na raiz do repositorio.
 
 Criterios de aceite:
 
