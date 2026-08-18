@@ -92,7 +92,7 @@ Criterios de aceite:
 
 ## Confiabilidade da Aplicacao
 
-### [ ] APP-01 - Alinhar os campos editaveis com a dica da interface
+### [x] APP-01 - Alinhar os campos editaveis com a dica da interface
 
 Dependencias: INFRA-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`APP-01 - Alinhar os campos editaveis com a dica da interface`
+`APP-02 - Exibir status e falhas de exportacao`
 
-Depois de concluir APP-01, atualize o estado dela para `[x]` e prossiga para uma tarefa sem dependencias pendentes.
+Depois de concluir APP-02, atualize o estado dela para `[x]` e prossiga para `APP-03`.
