@@ -75,7 +75,7 @@ Criterios de aceite:
 1. Uma pessoa sem contexto consegue abrir e usar o projeto apenas com o README.
 2. O processo de publicacao esta documentado e corresponde a configuracao real.
 
-### [ ] DOC-02 - Criar instrucoes permanentes para agentes
+### [x] DOC-02 - Criar instrucoes permanentes para agentes
 
 Dependencias: DOC-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`DOC-02 - Criar instrucoes permanentes para agentes`
+`APP-01 - Alinhar os campos editaveis com a dica da interface`
 
-Depois de concluir DOC-02, atualize o estado dela para `[x]` e prossiga para `APP-01` ou para uma tarefa de qualidade nao bloqueada.
+Depois de concluir APP-01, atualize o estado dela para `[x]` e prossiga para uma tarefa sem dependencias pendentes.
