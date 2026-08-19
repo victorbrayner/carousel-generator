@@ -563,10 +563,31 @@
   function fitAllAscii(){
     document.querySelectorAll('.slide').forEach(fitAsciiIn);
   }
-  window.addEventListener('load', fitAllAscii);
-  window.addEventListener('resize', fitAllAscii);
-  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitAllAscii); }
-  fitAllAscii();
+
+  /**
+   * Wires `fitSlides` and `fitAllAscii` to a single set of triggers: immediate,
+   * `load`, `resize` (coalesced via `requestAnimationFrame`), and
+   * `document.fonts.ready`. Replaces the duplicated listeners that each function
+   * used to register on its own.
+   * @returns {void}
+   */
+  function setupResponsiveFit(){
+    const refit = () => {
+      fitSlides();
+      fitAllAscii();
+    };
+    refit();
+    let rafId = 0;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(refit);
+    });
+    window.addEventListener('load', refit);
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(refit);
+    }
+  }
+  setupResponsiveFit();
 
   // ---------- month sync across all slides ----------
   /**
