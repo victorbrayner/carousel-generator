@@ -185,7 +185,7 @@ Criterios de aceite:
 1. Um unico comando executa os testes localmente.
 2. Os testes confirmam que a pagina abre sem erro em desktop e mobile.
 
-### [ ] QA-02 - Testar a exportacao dos slides
+### [x] QA-02 - Testar a exportacao dos slides
 
 Dependencias: QA-01, APP-02
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`QA-02 - Testar a exportacao dos slides`
+`QA-03 - Criar testes visuais de regressao`
 
-Depois de concluir QA-02, atualize o estado dela para `[x]` e prossiga para `QA-03`.
+Depois de concluir QA-03, atualize o estado dela para `[x]` e prossiga para `CI-01`.

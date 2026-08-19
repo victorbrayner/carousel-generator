@@ -764,6 +764,9 @@
   } else {
     enableExports();
   }
+
+  // expose internals for automated testing
+  window.__carouselExport = { captureSlide, slideOrder };
 </script>
 </body>
 </html>
