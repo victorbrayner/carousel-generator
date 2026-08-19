@@ -508,6 +508,14 @@
   </div>
 
 <script>
+  const CARROUSEL_CONFIG = Object.freeze({
+    BASE_WIDTH: 1080,
+    BASE_HEIGHT: 1350,
+    EXPORT_SCALE: 2,
+    EXPORT_BACKGROUND: '#0B0F14',
+    EXPORT_MIME_TYPE: 'image/png'
+  });
+
   // ---------- responsive fit: keep 1080x1350 DOM, scale visually ----------
   /**
    * Rescales every `.slide` so its 1080x1350 CSS canvas fits its `.slide-wrap` width.
@@ -517,9 +525,9 @@
   function fitSlides(){
     document.querySelectorAll('.slide-wrap').forEach(wrap=>{
       const slide = wrap.querySelector('.slide');
-      const scale = wrap.clientWidth / 1080;
+      const scale = wrap.clientWidth / CARROUSEL_CONFIG.BASE_WIDTH;
       slide.style.transform = 'scale(' + scale + ')';
-      wrap.style.height = (1350 * scale) + 'px';
+      wrap.style.height = (CARROUSEL_CONFIG.BASE_HEIGHT * scale) + 'px';
     });
   }
   window.addEventListener('load', fitSlides);
@@ -587,6 +595,39 @@
   syncMonth();
 
   // ---------- export helpers ----------
+  const MESSAGES = Object.freeze({
+    GENERATING_STATUS: (name) => 'Gerando ' + name + '.',
+    GENERATING_PROGRESS_BTN: (i, total) => 'Gerando ' + (i + 1) + '/' + total + '…',
+    GENERATING_PROGRESS_STATUS: (i, total) => 'Gerando slide ' + (i + 1) + ' de ' + total + '.',
+    GENERATING_BTN: 'Gerando…',
+    GENERATED: (name) => name + ' foi gerado. Confira o download do navegador.',
+    ZIP_GENERATED: 'ZIP com os 4 slides foi gerado. Confira o download do navegador.',
+    FAILED_INDIVIDUAL: (name) => 'Não foi possível gerar ' + name + '. Tente novamente.',
+    FAILED_ZIP: 'Não foi possível criar o arquivo ZIP. Tente novamente.',
+    ZIP_MISSING: 'Biblioteca ZIP não disponível. Recarregue a página.',
+    READY: 'Pronto para exportar.',
+    LOADING_FONTS: 'Carregando fontes para exportação.',
+    LOADING_FONTS_BTN: 'Carregando fontes…',
+    DEPS_UNAVAILABLE: 'Não foi possível carregar as bibliotecas de exportação (html2canvas ou JSZip). Verifique sua conexão e recarregue a página.',
+    EXPORTS_UNAVAILABLE_BTN: 'Exportação indisponível',
+    DOWNLOAD_ALL_BTN: '⬇ Baixar todos os slides (ZIP)',
+    COMPACTING_BTN: 'Compactando…',
+    COMPACTING_STATUS: 'Compactando os slides em ZIP.',
+    OVERFLOW_PREFIX: 'Texto ultrapassa o layout em: ',
+    OVERFLOW_REDUZCA_SUFFIX: '. Reduza o conteúdo antes de exportar.'
+  });
+
+  /**
+   * Builds the overflow-fields suffix appended to ZIP-failure status messages.
+   * Returns an empty string when no fields overflowed so concatenation stays simple.
+   * @param {string[]} fields - Field labels that overflowed (may contain duplicates).
+   * @returns {string} " Texto ultrapassa o layout em: A, B." or "".
+   */
+  function overflowSuffix(fields){
+    if(!fields.length) return '';
+    return ' Texto ultrapassa o layout em: ' + [...new Set(fields)].join(', ') + '.';
+  }
+
   const downloadAllBtn = document.getElementById('downloadAllBtn');
   const exportStatus = document.getElementById('exportStatus');
   const slideOrder = [
@@ -693,7 +734,7 @@
         reject(err);
         return;
       }
-      html2canvas(clone, {backgroundColor:'#0B0F14', scale:2, useCORS:true, width:1080, height:1350})
+      html2canvas(clone, {backgroundColor: CARROUSEL_CONFIG.EXPORT_BACKGROUND, scale: CARROUSEL_CONFIG.EXPORT_SCALE, useCORS: true, width: CARROUSEL_CONFIG.BASE_WIDTH, height: CARROUSEL_CONFIG.BASE_HEIGHT})
         .then(canvas=>{
           document.body.removeChild(clone);
           resolve(canvas);
@@ -716,7 +757,7 @@
   function triggerDownload(canvas, filename){
     const link = document.createElement('a');
     link.download = filename + '.png';
-    link.href = canvas.toDataURL('image/png');
+    link.href = canvas.toDataURL(CARROUSEL_CONFIG.EXPORT_MIME_TYPE);
     link.click();
   }
 
@@ -725,19 +766,19 @@
       const id = btn.dataset.target;
       const name = btn.dataset.name;
       const original = btn.textContent;
-      btn.textContent = 'Gerando…';
+      btn.textContent = MESSAGES.GENERATING_BTN;
       btn.disabled = true;
-      showExportStatus('Gerando ' + name + '.');
+      showExportStatus(MESSAGES.GENERATING_STATUS(name));
       try{
         const canvas = await captureSlide(id);
         triggerDownload(canvas, name);
-        showExportStatus(name + ' foi gerado. Confira o download do navegador.', 'success');
+        showExportStatus(MESSAGES.GENERATED(name), 'success');
       }catch(e){
         console.error(e);
         if(e.isOverflow){
-          showExportStatus('Texto ultrapassa o layout em: ' + e.overflowFields.join(', ') + '. Reduza o conteúdo antes de exportar.', 'error');
+          showExportStatus(MESSAGES.OVERFLOW_PREFIX + e.overflowFields.join(', ') + MESSAGES.OVERFLOW_REDUZCA_SUFFIX, 'error');
         }else{
-          showExportStatus('Não foi possível gerar ' + name + '. Tente novamente.', 'error');
+          showExportStatus(MESSAGES.FAILED_INDIVIDUAL(name), 'error');
         }
       }
       btn.textContent = original;
@@ -747,7 +788,7 @@
 
   downloadAllBtn.addEventListener('click', async ()=>{
     if(typeof JSZip === 'undefined'){
-      showExportStatus('Biblioteca ZIP não disponível. Recarregue a página.', 'error');
+      showExportStatus(MESSAGES.ZIP_MISSING, 'error');
       return;
     }
     downloadAllBtn.disabled = true;
@@ -755,14 +796,15 @@
     const failed = [];
     const overflowFields = [];
     const zip = new JSZip();
+    const total = slideOrder.length;
     let completed = 0;
-    for(let i=0; i<slideOrder.length; i++){
-      downloadAllBtn.textContent = 'Gerando ' + (i+1) + '/4…';
-      showExportStatus('Gerando slide ' + (i+1) + ' de 4.');
+    for(let i=0; i<total; i++){
+      downloadAllBtn.textContent = MESSAGES.GENERATING_PROGRESS_BTN(i, total);
+      showExportStatus(MESSAGES.GENERATING_PROGRESS_STATUS(i, total));
       try{
         const canvas = await captureSlide(slideOrder[i].id);
         const blob = await new Promise((resolve, reject)=>{
-          canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas vazio.')), 'image/png');
+          canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas vazio.')), CARROUSEL_CONFIG.EXPORT_MIME_TYPE);
         });
         zip.file(slideOrder[i].name + '.png', blob);
         completed++;
@@ -777,12 +819,11 @@
     if(completed === 0){
       downloadAllBtn.textContent = original;
       downloadAllBtn.disabled = false;
-      const overflowMsg = overflowFields.length ? ' Texto ultrapassa o layout em: ' + [...new Set(overflowFields)].join(', ') + '.' : '';
-      showExportStatus('0 de 4 slides foram gerados. Falharam: ' + failed.join(', ') + '.' + overflowMsg, 'error');
+      showExportStatus('0 de ' + total + ' slides foram gerados. Falharam: ' + failed.join(', ') + '.' + overflowSuffix(overflowFields), 'error');
       return;
     }
-    downloadAllBtn.textContent = 'Compactando…';
-    showExportStatus('Compactando os slides em ZIP.');
+    downloadAllBtn.textContent = MESSAGES.COMPACTING_BTN;
+    showExportStatus(MESSAGES.COMPACTING_STATUS);
     try{
       const zipBlob = await zip.generateAsync({type:'blob'});
       const link = document.createElement('a');
@@ -791,14 +832,13 @@
       link.click();
       URL.revokeObjectURL(link.href);
       if(failed.length){
-        const overflowMsg = overflowFields.length ? ' Texto ultrapassa o layout em: ' + [...new Set(overflowFields)].join(', ') + '.' : '';
-        showExportStatus(completed + ' de 4 slides foram incluídos no ZIP. Falharam: ' + failed.join(', ') + '.' + overflowMsg, 'error');
+        showExportStatus(completed + ' de ' + total + ' slides foram incluídos no ZIP. Falharam: ' + failed.join(', ') + '.' + overflowSuffix(overflowFields), 'error');
       }else{
-        showExportStatus('ZIP com os 4 slides foi gerado. Confira o download do navegador.', 'success');
+        showExportStatus(MESSAGES.ZIP_GENERATED, 'success');
       }
     }catch(e){
       console.error(e);
-      showExportStatus('Não foi possível criar o arquivo ZIP. Tente novamente.', 'error');
+      showExportStatus(MESSAGES.FAILED_ZIP, 'error');
     }
     downloadAllBtn.textContent = original;
     downloadAllBtn.disabled = false;
@@ -809,24 +849,24 @@
   }
   function enableExports(){
     downloadAllBtn.disabled = false;
-    downloadAllBtn.textContent = '⬇ Baixar todos os slides (ZIP)';
+    downloadAllBtn.textContent = MESSAGES.DOWNLOAD_ALL_BTN;
     document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
-    showExportStatus('Pronto para exportar.', 'success');
+    showExportStatus(MESSAGES.READY, 'success');
   }
   function disableExports(message, state){
     downloadAllBtn.disabled = true;
-    downloadAllBtn.textContent = 'Exportação indisponível';
+    downloadAllBtn.textContent = MESSAGES.EXPORTS_UNAVAILABLE_BTN;
     document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = true);
     showExportStatus(message, state);
   }
 
   // disable downloads until fonts are actually loaded (avoids blank/fallback-font exports)
   downloadAllBtn.disabled = true;
-  downloadAllBtn.textContent = 'Carregando fontes…';
-  showExportStatus('Carregando fontes para exportação.');
+  downloadAllBtn.textContent = MESSAGES.LOADING_FONTS_BTN;
+  showExportStatus(MESSAGES.LOADING_FONTS);
   document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = true);
   if(!dependenciesAvailable()){
-    disableExports('Não foi possível carregar as bibliotecas de exportação (html2canvas ou JSZip). Verifique sua conexão e recarregue a página.', 'error');
+    disableExports(MESSAGES.DEPS_UNAVAILABLE, 'error');
   } else if(document.fonts && document.fonts.ready){
     document.fonts.ready.then(()=>{
       enableExports();
