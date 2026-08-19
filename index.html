@@ -630,12 +630,21 @@
 
   const downloadAllBtn = document.getElementById('downloadAllBtn');
   const exportStatus = document.getElementById('exportStatus');
-  const slideOrder = [
-    {id:'slide1', name:'01-capa'},
-    {id:'slide2', name:'02-mentoria-como-funciona'},
-    {id:'slide3', name:'03-como-agendar'},
-    {id:'slide4', name:'04-aulas'}
-  ];
+
+  /**
+   * Derives the slide order from the `.dl-btn` elements on the page. Each button
+   * carries `data-target` (slide id) and `data-name` (output filename), so the
+   * download order is whatever order the buttons appear in the DOM. Adding or
+   * removing a slide becomes a single HTML edit instead of editing both markup
+   * and the JS array.
+   * @returns {Array<{id: string, name: string}>} Slides in export order.
+   */
+  function getSlideOrder(){
+    return [...document.querySelectorAll('.dl-btn')].map(btn => ({
+      id: btn.dataset.target,
+      name: btn.dataset.name
+    }));
+  }
 
   function showExportStatus(message, state){
     exportStatus.textContent = message;
@@ -796,21 +805,22 @@
     const failed = [];
     const overflowFields = [];
     const zip = new JSZip();
-    const total = slideOrder.length;
+    const slides = getSlideOrder();
+    const total = slides.length;
     let completed = 0;
     for(let i=0; i<total; i++){
       downloadAllBtn.textContent = MESSAGES.GENERATING_PROGRESS_BTN(i, total);
       showExportStatus(MESSAGES.GENERATING_PROGRESS_STATUS(i, total));
       try{
-        const canvas = await captureSlide(slideOrder[i].id);
+        const canvas = await captureSlide(slides[i].id);
         const blob = await new Promise((resolve, reject)=>{
           canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas vazio.')), CARROUSEL_CONFIG.EXPORT_MIME_TYPE);
         });
-        zip.file(slideOrder[i].name + '.png', blob);
+        zip.file(slides[i].name + '.png', blob);
         completed++;
       }catch(e){
         console.error(e);
-        failed.push(slideOrder[i].name);
+        failed.push(slides[i].name);
         if(e.isOverflow){
           overflowFields.push(...e.overflowFields);
         }
@@ -876,7 +886,7 @@
   }
 
   // expose internals for automated testing
-  window.__carouselExport = { captureSlide, slideOrder, syncMonth };
+  window.__carouselExport = { captureSlide, syncMonth, getSlideOrder };
 </script>
 </body>
 </html>
