@@ -277,7 +277,7 @@ Criterios de aceite:
 1. A skill e usada somente para mudancas que possam afetar a apresentacao.
 2. O procedimento de validacao e reproduzivel.
 
-### [ ] AGENT-04 - Criar comandos de revisao e publicacao
+### [x] AGENT-04 - Criar comandos de revisao e publicacao
 
 Dependencias: AGENT-01, CI-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`AGENT-04 - Criar comandos de revisao e publicacao`
+`OPS-01 - Criar checklist mensal`
 
-Depois de concluir AGENT-04, atualize o estado dela para `[x]` e prossiga para `OPS-01`.
+Depois de concluir OPS-01, atualize o estado dela para `[x]`.
