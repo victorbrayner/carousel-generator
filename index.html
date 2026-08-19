@@ -734,23 +734,35 @@
     downloadAllBtn.disabled = false;
   });
 
+  function dependenciesAvailable(){
+    return typeof html2canvas !== 'undefined' && typeof JSZip !== 'undefined';
+  }
+  function enableExports(){
+    downloadAllBtn.disabled = false;
+    downloadAllBtn.textContent = '⬇ Baixar todos os slides (ZIP)';
+    document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
+    showExportStatus('Pronto para exportar.', 'success');
+  }
+  function disableExports(message, state){
+    downloadAllBtn.disabled = true;
+    downloadAllBtn.textContent = 'Exportação indisponível';
+    document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = true);
+    showExportStatus(message, state);
+  }
+
   // disable downloads until fonts are actually loaded (avoids blank/fallback-font exports)
   downloadAllBtn.disabled = true;
   downloadAllBtn.textContent = 'Carregando fontes…';
   showExportStatus('Carregando fontes para exportação.');
   document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = true);
-  if(document.fonts && document.fonts.ready){
+  if(!dependenciesAvailable()){
+    disableExports('Não foi possível carregar as bibliotecas de exportação (html2canvas ou JSZip). Verifique sua conexão e recarregue a página.', 'error');
+  } else if(document.fonts && document.fonts.ready){
     document.fonts.ready.then(()=>{
-      downloadAllBtn.disabled = false;
-      downloadAllBtn.textContent = '⬇ Baixar todos os slides (ZIP)';
-      document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
-      showExportStatus('Pronto para exportar.', 'success');
+      enableExports();
     });
   } else {
-    downloadAllBtn.disabled = false;
-    downloadAllBtn.textContent = '⬇ Baixar todos os slides (ZIP)';
-    document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
-    showExportStatus('Pronto para exportar.', 'success');
+    enableExports();
   }
 </script>
 </body>

@@ -153,7 +153,7 @@ Criterios de aceite:
 1. A exportacao nao gera texto cortado sem aviso.
 2. O usuario recebe uma orientacao acionavel para corrigir o campo.
 
-### [ ] APP-05 - Tratar indisponibilidade de dependencias externas
+### [x] APP-05 - Tratar indisponibilidade de dependencias externas
 
 Dependencias: APP-02
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`APP-05 - Tratar indisponibilidade de dependencias externas`
+`QA-02 - Testar a exportacao dos slides`
 
-Depois de concluir APP-05, atualize o estado dela para `[x]` e prossiga para `QA-02`.
+Depois de concluir QA-02, atualize o estado dela para `[x]` e prossiga para `QA-03`.

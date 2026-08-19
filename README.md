@@ -14,14 +14,26 @@ The project has no build step or server requirement.
 1. Open `index.html` in a modern browser.
 2. Keep an internet connection while using the page because fonts and the image-export library are loaded from external CDNs.
 
+## External Dependencies
+
+The page relies on fixed versions loaded from public CDNs. An internet connection is required while using the application.
+
+| Resource | Version | Purpose |
+|----------|---------|---------|
+| `html2canvas` | 1.4.1 | Renders each slide to a PNG canvas. |
+| `jszip` | 3.10.1 | Packages the four PNGs into a single ZIP file. |
+| Google Fonts (Space Grotesk, JetBrains Mono, Inter) | latest stable | Typography for the slides and UI. |
+
+Export buttons stay disabled if `html2canvas` or `jszip` fails to load.
+
 ## Edit the Carousel
 
 1. Change the month through the `Mes da agenda` field. It updates the tab name on all slides.
 2. Click an editable text area in a slide to change its content.
 3. Use the individual download button to export one slide.
-4. Use `Baixar os 4 slides (PNG)` to export the complete carousel.
+4. Use `Baixar todos os slides (ZIP)` to export the complete carousel as a single ZIP file.
 5. Wait for fonts to load before exporting. Export buttons remain disabled until then.
-6. Check the status message in the toolbar for export progress, success, or failed slide names.
+6. Check the status message in the toolbar for export progress, success, failed slide names, or overflow warnings.
 
 The output slide dimensions are 1080x1350 pixels. The current export scale produces PNG files at 2160x2700 pixels.
 
@@ -53,8 +65,7 @@ Browser tests use Playwright with Chromium in desktop and mobile viewports.
 
 ## Current Limitations
 
-- Fonts and `html2canvas` depend on third-party CDNs.
-- Long editable content can exceed the fixed slide layout.
-- Browsers can block multiple automatic downloads when exporting all slides.
+- Fonts, `html2canvas`, and `jszip` depend on third-party CDNs.
+- Long editable content can exceed the fixed slide layout; exports are blocked and the affected fields are reported.
 
 These items are tracked in `TASKS.md`.
