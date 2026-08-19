@@ -22,6 +22,7 @@ async function waitForStableFit(page) {
 test('slide visuals match reference screenshots', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => window.__carouselAsciiReady);
   await waitForStableFit(page);
 
   for (const slide of slides) {
