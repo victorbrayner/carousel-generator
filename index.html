@@ -509,6 +509,11 @@
 
 <script>
   // ---------- responsive fit: keep 1080x1350 DOM, scale visually ----------
+  /**
+   * Rescales every `.slide` so its 1080x1350 CSS canvas fits its `.slide-wrap` width.
+   * Listener of `load` and `resize`. Idempotent; safe to invoke multiple times.
+   * @returns {void}
+   */
   function fitSlides(){
     document.querySelectorAll('.slide-wrap').forEach(wrap=>{
       const slide = wrap.querySelector('.slide');
@@ -522,6 +527,14 @@
   fitSlides();
 
   // ---------- fit the ASCII portrait exactly into its box (ratio-based, clone-safe) ----------
+  /**
+   * Scales the `.ascii-art` inside a slide's `.ascii-wrap` to fill the box while
+   * preserving its native aspect ratio. Skips when wrap or art is missing or has
+   * zero dimensions. Reset to scale(1) before measuring so previous transforms
+   * don't poison the layout.
+   * @param {HTMLElement} root - Slide root containing `.ascii-wrap` and `.ascii-art`.
+   * @returns {void}
+   */
   function fitAsciiIn(root){
     const wrap = root.querySelector('.ascii-wrap');
     const art = root.querySelector('.ascii-art');
@@ -534,6 +547,11 @@
     const scaleY = wrapRect.height / artRect.height;
     art.style.transform = 'scale(' + scaleX + ',' + scaleY + ')';
   }
+  /**
+   * Applies `fitAsciiIn` to every `.slide`. Listener of `load`, `resize` and
+   * `document.fonts.ready` so the portrait refits once fonts settle.
+   * @returns {void}
+   */
   function fitAllAscii(){
     document.querySelectorAll('.slide').forEach(fitAsciiIn);
   }
@@ -543,12 +561,24 @@
   fitAllAscii();
 
   // ---------- month sync across all slides ----------
+  /**
+   * Normalizes a month label into a slug: lowercase, accents stripped, single
+   * dashes between words, no leading/trailing whitespace.
+   * @param {string} str - Raw month label from user input.
+   * @returns {string} Slug suitable for the tab file name (e.g. "agosto", "mes-com-espacos").
+   */
   function slugify(str){
     return str.toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
       .trim().replace(/\s+/g,'-');
   }
   const monthInput = document.getElementById('monthInput');
+  /**
+   * Reads the value of `#monthInput`, slugifies it, and writes the result to
+   * every `.tab-month` across the four slides. Falls back to "mes" when empty.
+   * Exposed via `window.__carouselExport` for automated tests.
+   * @returns {void}
+   */
   function syncMonth(){
     const val = slugify(monthInput.value || 'mes');
     document.querySelectorAll('.tab-month').forEach(el=>{ el.textContent = val; });
@@ -571,6 +601,15 @@
     exportStatus.dataset.state = state || 'info';
   }
 
+  /**
+   * Builds an off-screen clone of the slide ready for `html2canvas` capture.
+   * Resets the scale transform, pins the clone outside the viewport, and strips
+   * every `[contenteditable]` so the export reflects the static layout (no
+   * focus rings, no caret, no editable affordances). The caller is responsible
+   * for `removeChild`-ing the returned clone.
+   * @param {string} id - DOM id of the slide element to clone (e.g. "slide1").
+   * @returns {HTMLElement} The cloned node, already appended to `document.body`.
+   */
   function createExportClone(id){
     const original = document.getElementById(id);
     const clone = original.cloneNode(true);
@@ -583,6 +622,15 @@
     return clone;
   }
 
+  /**
+   * Walks every `[data-field-label]` inside the given slide root and reports
+   * those whose rendered geometry exceeds the slide bounds or escapes any
+   * ancestor with `overflow: hidden`. Uses a 2px tolerance to ignore sub-pixel
+   * rounding noise. Duplicate labels are deduped so the user only sees each
+   * problem once.
+   * @param {HTMLElement} root - Slide root to inspect (the clone, in export context).
+   * @returns {Array<{label: string, element: HTMLElement}>} Detected overflow problems.
+   */
   function findOverflowFields(root){
     const problems = [];
     const slideRect = root.getBoundingClientRect();
@@ -623,6 +671,16 @@
     return problems;
   }
 
+  /**
+   * Captures a slide as a 2160x2700 PNG canvas via `html2canvas`. The clone is
+   * always removed from the DOM, whether the capture succeeds or fails.
+   *
+   * If any editable content escapes the slide bounds, rejects with an Error
+   * whose `isOverflow` is `true` and whose `overflowFields` is the list of
+   * `data-field-label` values that overflowed.
+   * @param {string} id - DOM id of the slide element to capture.
+   * @returns {Promise<HTMLCanvasElement>} The rendered canvas, 2160x2700 px.
+   */
   function captureSlide(id){
     return new Promise((resolve, reject)=>{
       const clone = createExportClone(id);
@@ -647,6 +705,14 @@
     });
   }
 
+  /**
+   * Triggers a browser download of the canvas as a PNG file using a
+   * temporary `<a download>` element. The element is not appended to the DOM;
+   * modern browsers honor `link.click()` regardless.
+   * @param {HTMLCanvasElement} canvas - The rendered slide.
+   * @param {string} filename - Output filename without extension (e.g. "01-capa").
+   * @returns {void}
+   */
   function triggerDownload(canvas, filename){
     const link = document.createElement('a');
     link.download = filename + '.png';
