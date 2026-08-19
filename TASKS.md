@@ -138,7 +138,7 @@ Criterios de aceite:
 2. Uma falha em um slide e comunicada ao usuario.
 3. Navegadores nao precisam liberar downloads multiplos.
 
-### [ ] APP-04 - Validar textos que ultrapassam o layout
+### [x] APP-04 - Validar textos que ultrapassam o layout
 
 Dependencias: APP-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`APP-04 - Validar textos que ultrapassam o layout`
+`APP-05 - Tratar indisponibilidade de dependencias externas`
 
-Depois de concluir APP-04, atualize o estado dela para `[x]` e prossiga para `APP-05`.
+Depois de concluir APP-05, atualize o estado dela para `[x]` e prossiga para `QA-02`.
