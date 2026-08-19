@@ -247,7 +247,7 @@ Criterios de aceite:
 1. O agente nao altera arquivos.
 2. Uma solicitacao de revisao gera achados objetivos e referencia arquivos afetados.
 
-### [ ] AGENT-02 - Criar skill para alteracoes de conteudo
+### [x] AGENT-02 - Criar skill para alteracoes de conteudo
 
 Dependencias: DOC-02, APP-04
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`AGENT-02 - Criar skill para alteracoes de conteudo`
+`AGENT-03 - Criar skill para garantia visual`
 
-Depois de concluir AGENT-02, atualize o estado dela para `[x]` e prossiga para `AGENT-03`.
+Depois de concluir AGENT-03, atualize o estado dela para `[x]` e prossiga para `AGENT-04`.
