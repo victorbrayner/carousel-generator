@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   :root{
     --bg-void:#0B0F14;
@@ -274,10 +275,10 @@
       <input type="text" id="monthInput" value="agosto" />
     </div>
 
-    <button class="btn primary" id="downloadAllBtn">⬇ Baixar os 4 slides (PNG)</button>
+    <button class="btn primary" id="downloadAllBtn">⬇ Baixar todos os slides (ZIP)</button>
 
     <div class="hint">
-      Clique nos títulos, textos, preço, assinatura ou CTA pra editar. O campo <b>“Mês da agenda”</b> atualiza a aba de todos os slides de uma vez. Espere as fontes carregarem antes de baixar (o botão fica desabilitado até lá).
+      Clique nos títulos, textos, preço, assinatura ou CTA pra editar. O campo <b>“Mês da agenda”</b> atualiza a aba de todos os slides de uma vez. Espere as fontes carregarem antes de baixar (o botão fica desabilitado até lá). O botão principal baixa um único ZIP com os 4 PNGs.
     </div>
     <p class="export-status" id="exportStatus" role="status" aria-live="polite"></p>
   </div>
@@ -617,30 +618,56 @@
   });
 
   downloadAllBtn.addEventListener('click', async ()=>{
+    if(typeof JSZip === 'undefined'){
+      showExportStatus('Biblioteca ZIP não disponível. Recarregue a página.', 'error');
+      return;
+    }
     downloadAllBtn.disabled = true;
     const original = downloadAllBtn.textContent;
     const failed = [];
+    const zip = new JSZip();
     let completed = 0;
     for(let i=0; i<slideOrder.length; i++){
       downloadAllBtn.textContent = 'Gerando ' + (i+1) + '/4…';
       showExportStatus('Gerando slide ' + (i+1) + ' de 4.');
       try{
         const canvas = await captureSlide(slideOrder[i].id);
-        triggerDownload(canvas, slideOrder[i].name);
+        const blob = await new Promise((resolve, reject)=>{
+          canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas vazio.')), 'image/png');
+        });
+        zip.file(slideOrder[i].name + '.png', blob);
         completed++;
       }catch(e){
         console.error(e);
         failed.push(slideOrder[i].name);
       }
-      await new Promise(r=>setTimeout(r, 350));
+    }
+    if(completed === 0){
+      downloadAllBtn.textContent = original;
+      downloadAllBtn.disabled = false;
+      showExportStatus('0 de 4 slides foram gerados. Falharam: ' + failed.join(', ') + '.', 'error');
+      return;
+    }
+    downloadAllBtn.textContent = 'Compactando…';
+    showExportStatus('Compactando os slides em ZIP.');
+    try{
+      const zipBlob = await zip.generateAsync({type:'blob'});
+      const link = document.createElement('a');
+      link.download = 'carrossel-' + slugify(monthInput.value || 'mes') + '.zip';
+      link.href = URL.createObjectURL(zipBlob);
+      link.click();
+      URL.revokeObjectURL(link.href);
+      if(failed.length){
+        showExportStatus(completed + ' de 4 slides foram incluídos no ZIP. Falharam: ' + failed.join(', ') + '.', 'error');
+      }else{
+        showExportStatus('ZIP com os 4 slides foi gerado. Confira o download do navegador.', 'success');
+      }
+    }catch(e){
+      console.error(e);
+      showExportStatus('Não foi possível criar o arquivo ZIP. Tente novamente.', 'error');
     }
     downloadAllBtn.textContent = original;
     downloadAllBtn.disabled = false;
-    if(failed.length){
-      showExportStatus(completed + ' de 4 slides foram gerados. Falharam: ' + failed.join(', ') + '.', 'error');
-    }else{
-      showExportStatus('Os 4 slides foram gerados. Confira os downloads do navegador.', 'success');
-    }
   });
 
   // disable downloads until fonts are actually loaded (avoids blank/fallback-font exports)
@@ -651,13 +678,13 @@
   if(document.fonts && document.fonts.ready){
     document.fonts.ready.then(()=>{
       downloadAllBtn.disabled = false;
-      downloadAllBtn.textContent = '⬇ Baixar os 4 slides (PNG)';
+      downloadAllBtn.textContent = '⬇ Baixar todos os slides (ZIP)';
       document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
       showExportStatus('Pronto para exportar.', 'success');
     });
   } else {
     downloadAllBtn.disabled = false;
-    downloadAllBtn.textContent = '⬇ Baixar os 4 slides (PNG)';
+    downloadAllBtn.textContent = '⬇ Baixar todos os slides (ZIP)';
     document.querySelectorAll('.dl-btn').forEach(b=>b.disabled = false);
     showExportStatus('Pronto para exportar.', 'success');
   }

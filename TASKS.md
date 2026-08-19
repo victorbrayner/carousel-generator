@@ -122,7 +122,7 @@ Criterios de aceite:
 1. Falhas nao dependem do console para serem percebidas.
 2. O usuario sabe quais arquivos foram ou nao gerados.
 
-### [ ] APP-03 - Exportar todos os slides em ZIP
+### [x] APP-03 - Exportar todos os slides em ZIP
 
 Dependencias: APP-02
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`APP-03 - Exportar todos os slides em ZIP`
+`APP-04 - Validar textos que ultrapassam o layout`
 
-Depois de concluir APP-03, atualize o estado dela para `[x]` e prossiga para `APP-04`.
+Depois de concluir APP-04, atualize o estado dela para `[x]` e prossiga para `APP-05`.
