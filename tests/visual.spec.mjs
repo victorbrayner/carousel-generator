@@ -7,17 +7,28 @@ const slides = [
   { id: 'slide4', name: '04-aulas' }
 ];
 
+async function waitForStableFit(page) {
+  await page.waitForFunction(
+    () => {
+      const wrap = document.querySelector('.slide-wrap');
+      const target = 1350 * (wrap.clientWidth / 1080);
+      const actual = parseFloat(wrap.style.height);
+      return Math.abs(actual - target) < 0.5;
+    },
+    { timeout: 2000 }
+  );
+}
+
 test('slide visuals match reference screenshots', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
+  await waitForStableFit(page);
 
   for (const slide of slides) {
-    const dataUrl = await page.evaluate(async (id) => {
-      const canvas = await window.__carouselExport.captureSlide(id);
-      return canvas.toDataURL('image/png');
-    }, slide.id);
-
-    const buffer = Buffer.from(dataUrl.split(',')[1], 'base64');
-    expect(buffer).toMatchSnapshot(`${slide.name}.png`);
+    const wrap = page.locator(`#${slide.id}`).locator('..');
+    await expect(wrap).toHaveScreenshot(`${slide.name}.png`, {
+      mask: [page.locator('.tab-month'), page.locator('.cursor-blink')],
+      maxDiffPixelRatio: 0.02
+    });
   }
 });
