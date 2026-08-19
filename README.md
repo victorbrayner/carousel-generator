@@ -63,6 +63,8 @@ Reference screenshots for the four exported slides live in `tests/visual.spec.mj
 - Run visual tests: `npx playwright test visual`
 - Update references after an approved visual change: `npx playwright test visual --update-snapshots`
 
+The CI workflow runs on `windows-latest` because the reference screenshots were generated on Windows. If you regenerate them on a different OS, update the workflow runner accordingly.
+
 Always review snapshot diffs before committing updated references.
 
 ## Maintenance Workflow

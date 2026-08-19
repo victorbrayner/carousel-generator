@@ -215,7 +215,7 @@ Criterios de aceite:
 1. Alteracoes visuais inesperadas sao detectadas automaticamente.
 2. As referencias sao atualizadas apenas de forma intencional.
 
-### [ ] CI-01 - Executar validacoes no GitHub Actions
+### [x] CI-01 - Executar validacoes no GitHub Actions
 
 Dependencias: QA-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`CI-01 - Executar validacoes no GitHub Actions`
+`AGENT-01 - Criar agente de revisao do carrossel`
 
-Depois de concluir CI-01, atualize o estado dela para `[x]` e prossiga para `AGENT-01`.
+Depois de concluir AGENT-01, atualize o estado dela para `[x]` e prossiga para `AGENT-02`.
