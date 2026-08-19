@@ -262,7 +262,7 @@ Criterios de aceite:
 1. A skill nao e acionada para manutencao tecnica sem alteracao de conteudo.
 2. Alteracoes de conteudo preservam o layout e passam nas validacoes definidas.
 
-### [ ] AGENT-03 - Criar skill para garantia visual
+### [x] AGENT-03 - Criar skill para garantia visual
 
 Dependencias: DOC-02, QA-03
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`AGENT-03 - Criar skill para garantia visual`
+`AGENT-04 - Criar comandos de revisao e publicacao`
 
-Depois de concluir AGENT-03, atualize o estado dela para `[x]` e prossiga para `AGENT-04`.
+Depois de concluir AGENT-04, atualize o estado dela para `[x]` e prossiga para `OPS-01`.
