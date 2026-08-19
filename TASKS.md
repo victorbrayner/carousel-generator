@@ -200,7 +200,7 @@ Criterios de aceite:
 1. Os quatro slides sao testados.
 2. Uma regressao na exportacao falha a suite de testes.
 
-### [ ] QA-03 - Criar testes visuais de regressao
+### [x] QA-03 - Criar testes visuais de regressao
 
 Dependencias: QA-01, APP-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`QA-03 - Criar testes visuais de regressao`
+`CI-01 - Executar validacoes no GitHub Actions`
 
-Depois de concluir QA-03, atualize o estado dela para `[x]` e prossiga para `CI-01`.
+Depois de concluir CI-01, atualize o estado dela para `[x]` e prossiga para `AGENT-01`.

@@ -56,6 +56,15 @@ Browser tests use Playwright with Chromium in desktop and mobile viewports.
 2. Run `npx playwright install chromium` once to download the test browser.
 3. Run `npm test` to start the local static server and execute the suite.
 
+## Visual Regression Tests
+
+Reference screenshots for the four exported slides live in `tests/visual.spec.mjs-snapshots/`. These images are versioned so unexpected visual changes fail the suite.
+
+- Run visual tests: `npx playwright test visual`
+- Update references after an approved visual change: `npx playwright test visual --update-snapshots`
+
+Always review snapshot diffs before committing updated references.
+
 ## Maintenance Workflow
 
 1. Check `TASKS.md` and select one unblocked task.
