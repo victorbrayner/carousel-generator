@@ -294,7 +294,7 @@ Criterios de aceite:
 
 ## Manutencao Periodica
 
-### [ ] OPS-01 - Criar checklist mensal
+### [x] OPS-01 - Criar checklist mensal
 
 Dependencias: APP-05, QA-02
 
@@ -311,6 +311,4 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`OPS-01 - Criar checklist mensal`
-
-Depois de concluir OPS-01, atualize o estado dela para `[x]`.
+Nao ha tarefas pendentes no backlog. Novas necessidades devem ser adicionadas ao final deste arquivo com identificador e criterios de aceite.

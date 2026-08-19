@@ -74,9 +74,14 @@ Always review snapshot diffs before committing updated references.
 3. Update its status and acceptance criteria in `TASKS.md` after verification.
 4. Commit and push the change so Netlify can publish it.
 
+## Periodic Maintenance
+
+Run the monthly checklist in `OPS.md` to verify the published URL, export flow, fonts, and external dependencies. Record the date and results in the log inside `OPS.md`. If the checklist reveals a problem, open a new task in `TASKS.md` so it can be tracked and fixed.
+
 ## Current Limitations
 
 - Fonts, `html2canvas`, and `jszip` depend on third-party CDNs.
 - Long editable content can exceed the fixed slide layout; exports are blocked and the affected fields are reported.
 
 These items are tracked in `TASKS.md`.
+
