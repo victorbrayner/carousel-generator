@@ -232,7 +232,7 @@ Criterios de aceite:
 
 ## Harness de Agentes
 
-### [ ] AGENT-01 - Criar agente de revisao do carrossel
+### [x] AGENT-01 - Criar agente de revisao do carrossel
 
 Dependencias: DOC-02, QA-01
 
@@ -311,6 +311,6 @@ Criterios de aceite:
 
 ## Proxima Tarefa
 
-`AGENT-01 - Criar agente de revisao do carrossel`
+`AGENT-02 - Criar skill para alteracoes de conteudo`
 
-Depois de concluir AGENT-01, atualize o estado dela para `[x]` e prossiga para `AGENT-02`.
+Depois de concluir AGENT-02, atualize o estado dela para `[x]` e prossiga para `AGENT-03`.
