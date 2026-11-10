@@ -50,15 +50,15 @@ The static entry point is `index.html` at the repository root. Do not rename or 
 
 ## Test
 
-Browser tests use Playwright with Chromium in desktop and mobile viewports.
+Browser tests use Playwright with Chromium in desktop and mobile viewports, plus Firefox on desktop for overflow and export regression checks.
 
 1. Run `npm install` to install the fixed test dependency.
-2. Run `npx playwright install chromium` once to download the test browser.
+2. Run `npx playwright install chromium firefox` once to download the test browsers.
 3. Run `npm test` to start the local static server and execute the suite.
 
 ## Visual Regression Tests
 
-Reference screenshots for the four exported slides live in `tests/visual.spec.mjs-snapshots/`. These images are versioned so unexpected visual changes fail the suite.
+Reference screenshots for the four exported slides live in `tests/visual.spec.mjs-snapshots/`. These images are versioned so unexpected visual changes fail the suite. Visual snapshots run only in the Chromium projects.
 
 - Run visual tests: `npx playwright test visual`
 - Update references after an approved visual change: `npx playwright test visual --update-snapshots`

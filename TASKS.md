@@ -220,6 +220,25 @@ Criterios de aceite:
 1. Alteracoes visuais inesperadas sao detectadas automaticamente.
 2. As referencias sao atualizadas apenas de forma intencional.
 
+### [x] QA-04 - Corrigir falso positivo de overflow com campos inline no Gecko
+
+Severidade: alta
+
+Dependencias: nenhuma
+
+Primeiros passos:
+
+1. Reproduzir a falha de exportacao dos slides 3 e 4 no Zen, que usa o motor Gecko.
+2. Ignorar a comparacao `scrollWidth`/`clientWidth` para elementos `display: inline` em `findOverflowFields`.
+3. Adicionar testes de exportacao com conteudo padrao e de overflow real para campos inline.
+4. Adicionar um projeto Firefox ao Playwright para cobrir a regressao no CI.
+
+Criterios de aceite:
+
+1. Os slides 3 e 4 exportam no Zen com o conteudo padrao e o mes "novembro".
+2. Textos realmente longos em "Dica do agendamento" e "Preco" continuam bloqueados.
+3. A suite do Chromium permanece verde e o projeto Firefox fica configurado no CI.
+
 ### [x] CI-01 - Executar validacoes no GitHub Actions
 
 Dependencias: QA-01

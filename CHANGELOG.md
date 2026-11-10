@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- False overflow errors blocking slides 3 and 4 export on Gecko browsers such as Firefox and Zen.
+
 ## [1.1.0] - 2026-08-19
 
 ### Added

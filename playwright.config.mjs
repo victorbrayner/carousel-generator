@@ -21,6 +21,11 @@ export default defineConfig({
     {
       name: 'mobile-chromium',
       use: { ...devices['iPhone 13'], browserName: 'chromium' }
+    },
+    {
+      name: 'desktop-firefox',
+      use: { browserName: 'firefox', viewport: { width: 1440, height: 1000 } },
+      testMatch: ['**/overflow.spec.mjs', '**/month-export.spec.mjs']
     }
   ]
 });

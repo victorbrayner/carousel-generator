@@ -673,7 +673,10 @@
       const label = el.dataset.fieldLabel || 'Campo sem nome';
       if(seen.has(label)) return;
       const rect = el.getBoundingClientRect();
-      const horizontalOverflow = el.scrollWidth > el.clientWidth + tolerance;
+      // Gecko (Firefox/Zen) reports a non-zero scrollWidth with clientWidth 0
+      // for inline boxes, which would flag every inline field as overflowing.
+      const display = window.getComputedStyle(el).display;
+      const horizontalOverflow = display !== 'inline' && el.scrollWidth > el.clientWidth + tolerance;
       const exceedsSlide = rect.bottom > slideRect.bottom + tolerance || rect.right > slideRect.right + tolerance || rect.top < slideRect.top - tolerance || rect.left < slideRect.left - tolerance;
       if(horizontalOverflow || exceedsSlide || overflowsParent(el)){
         problems.push({label, element: el});
